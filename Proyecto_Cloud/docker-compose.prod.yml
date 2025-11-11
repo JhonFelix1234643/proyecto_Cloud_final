@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    ports:
+      - "80:8000"  # Cambiar a puerto 80 para producción
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./employees.db
+    # Remover volumes de desarrollo
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  # En producción podrías usar MySQL externo o mantener SQLite
+  # db:
+  #   image: mysql:8.0
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_DATABASE: empleados_db
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+
+# volumes:
+#   db_data:
