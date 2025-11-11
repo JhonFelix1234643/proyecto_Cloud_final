@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Eliminar Empleado - Sistema de Empleados{% endblock %}
+
+{% block content %}
+<h2>🗑️ Eliminar Empleado</h2>
+<div class="alert alert-danger">
+    <h4>¿Está seguro que desea eliminar este empleado?</h4>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ employee.name }}</h5>
+            <p class="card-text">
+                <strong>ID:</strong> {{ employee.id }}<br>
+                <strong>Email:</strong> {{ employee.email }}<br>
+                <strong>Departamento:</strong> 
+                <span class="badge bg-secondary">{{ employee.department }}</span><br>
+                <strong>Posición:</strong> {{ employee.position }}<br>
+                <strong>Salario:</strong> ${{ "%.2f"|format(employee.salary) }}<br>
+                <strong>Fecha Contratación:</strong> {{ employee.hire_date }}
+            </p>
+        </div>
+    </div>
+    <p class="mt-3 mb-0"><strong>⚠️ Esta acción no se puede deshacer.</strong></p>
+</div>
+<form method="post" action="/delete/{{ employee.id }}">
+    <button type="submit" class="btn btn-danger">✅ Sí, Eliminar</button>
+    <a href="/" class="btn btn-secondary">❌ Cancelar</a>
+</form>
+{% endblock %}

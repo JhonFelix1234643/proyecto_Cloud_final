@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Listado de Empleados</h2>
+    <a href="/create" class="btn btn-primary">➕ Nuevo Empleado</a>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h5>Total Empleados</h5>
+            <h2>{{ total_employees }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h5>Nómina Total</h5>
+            <h2>${{ "%.2f"|format(total_salary) }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <h5>Salario Promedio</h5>
+            <h2>${{ "%.2f"|format(avg_salary) }}</h2>
+        </div>
+    </div>
+</div>
+
+{% if employees %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Departamento</th>
+                <th>Posición</th>
+                <th>Salario</th>
+                <th>Fecha Contratación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td><strong>{{ employee.name }}</strong></td>
+                <td>{{ employee.email }}</td>
+                <td>
+                    <span class="badge department-badge 
+                        {% if employee.department == 'IT' %}bg-primary
+                        {% elif employee.department == 'HR' %}bg-success
+                        {% elif employee.department == 'Finance' %}bg-warning
+                        {% elif employee.department == 'Marketing' %}bg-info
+                        {% elif employee.department == 'Sales' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
+                        {{ employee.department }}
+                    </span>
+                </td>
+                <td>{{ employee.position }}</td>
+                <td class="salary-amount">${{ "%.2f"|format(employee.salary) }}</td>
+                <td>{{ employee.hire_date }}</td>
+                <td>
+                    <a href="/edit/{{ employee.id }}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                    <a href="/delete/{{ employee.id }}" class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    <h4>No hay empleados registrados</h4>
+    <p>Comienza agregando el primer empleado al sistema.</p>
+    <a href="/create" class="btn btn-primary">Crear Primer Empleado</a>
+</div>
+{% endif %}
+{% endblock %}

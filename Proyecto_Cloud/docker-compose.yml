@@ -1,0 +1,37 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:8000"
+    environment:
+      - DATABASE_URL=mysql+aiomysql://user:password@db:3306/crud_db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: >
+      sh -c "sleep 15 && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: crud_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password  # <- Usar autenticación más simple
+    command: 
+      - --default-authentication-plugin=mysql_native_password  # <- Configurar MySQL
+      - --skip-log-bin  # <- Para desarrollo
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      timeout: 20s
+      retries: 10
+      start_period: 40s
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
